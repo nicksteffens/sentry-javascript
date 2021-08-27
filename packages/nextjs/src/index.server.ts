@@ -15,6 +15,8 @@ export { ErrorBoundary, withErrorBoundary } from '@sentry/react';
 
 /** Inits the Sentry NextJS SDK on node. */
 export function init(options: NextjsOptions): void {
+  console.log('dev branch');
+
   if (options.debug) {
     logger.enable();
   }

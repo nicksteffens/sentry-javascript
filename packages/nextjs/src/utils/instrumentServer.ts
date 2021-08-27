@@ -146,6 +146,7 @@ function makeWrappedHandlerGetter(origHandlerGetter: HandlerGetter): WrappedHand
 function makeWrappedErrorLogger(origErrorLogger: ErrorLogger): WrappedErrorLogger {
   return function(this: Server, err: Error): void {
     // TODO add context data here
+    console.log('before capturing exception: ', err.message);
     captureException(err);
     return origErrorLogger.call(this, err);
   };
