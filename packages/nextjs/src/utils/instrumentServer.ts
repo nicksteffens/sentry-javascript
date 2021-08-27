@@ -98,6 +98,7 @@ export function instrumentServer(): void {
   console.log('instrumenting server...');
   const nextServerPrototype = Object.getPrototypeOf(createNextServer({}));
   fill(nextServerPrototype, 'getServerRequestHandler', makeWrappedHandlerGetter);
+  console.log('SDK setup complete: ', sdkSetupComplete);
 }
 
 /**

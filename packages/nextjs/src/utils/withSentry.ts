@@ -20,6 +20,7 @@ export const withSentry = (handler: NextApiHandler): WrappedNextApiHandler => {
     // fires (if we don't do this, the lambda will close too early and events will be either delayed or lost)
     // eslint-disable-next-line @typescript-eslint/unbound-method
     res.end = wrapEndMethod(res.end);
+    console.log('wrapped end method');
 
     // use a domain in order to prevent scope bleed between requests
     const local = domain.create();
@@ -97,6 +98,7 @@ type ResponseEndMethod = AugmentedResponse['end'];
 type WrappedResponseEndMethod = AugmentedResponse['end'];
 
 function wrapEndMethod(origEnd: ResponseEndMethod): WrappedResponseEndMethod {
+  console.log('wrapping end method');
   return async function newEnd(this: AugmentedResponse, ...args: unknown[]) {
     const transaction = this.__sentryTransaction;
 
