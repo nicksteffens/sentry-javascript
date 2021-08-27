@@ -95,6 +95,7 @@ export function instrumentServer(): void {
   // handled and the wrapped `Server.findPageComponents` is called:
   //    Replace URL in transaction name with parameterized version
 
+  console.log('instrumenting server...');
   const nextServerPrototype = Object.getPrototypeOf(createNextServer({}));
   fill(nextServerPrototype, 'getServerRequestHandler', makeWrappedHandlerGetter);
 }
@@ -107,6 +108,7 @@ export function instrumentServer(): void {
  * @returns A wrapped version of the same method, to monkeypatch in at server startup
  */
 function makeWrappedHandlerGetter(origHandlerGetter: HandlerGetter): WrappedHandlerGetter {
+  console.log('wrapping handlergetter');
   // We wrap this purely in order to be able to grab data and do further monkeypatching the first time it runs.
   // Otherwise, it's just a pass-through to the original method.
   const wrappedHandlerGetter = async function(this: NextServer): Promise<ReqHandler> {
@@ -128,6 +130,7 @@ function makeWrappedHandlerGetter(origHandlerGetter: HandlerGetter): WrappedHand
       fill(serverPrototype, 'ensureApiPage', makeWrappedMethodForGettingParameterizedPath);
       fill(serverPrototype, 'findPageComponents', makeWrappedMethodForGettingParameterizedPath);
 
+      console.log('sdk setup is now complete');
       sdkSetupComplete = true;
     }
 
@@ -144,6 +147,7 @@ function makeWrappedHandlerGetter(origHandlerGetter: HandlerGetter): WrappedHand
  * @returns A wrapped version of that logger
  */
 function makeWrappedErrorLogger(origErrorLogger: ErrorLogger): WrappedErrorLogger {
+  console.log('wrapping errorlogger...');
   return function(this: Server, err: Error): void {
     // TODO add context data here
     console.log('before capturing exception: ', err.message);
@@ -176,6 +180,7 @@ function getPublicDirFiles(): Set<string> {
  * @returns A wrapped version of that handler
  */
 function makeWrappedReqHandler(origReqHandler: ReqHandler): WrappedReqHandler {
+  console.log('wrapping reqhandler...');
   const publicDirFiles = getPublicDirFiles();
   // add transaction start and stop to the normal request handling
   const wrappedReqHandler = async function(
@@ -262,6 +267,7 @@ function makeWrappedReqHandler(origReqHandler: ReqHandler): WrappedReqHandler {
 function makeWrappedMethodForGettingParameterizedPath(
   origMethod: ApiPageEnsurer | PageComponentFinder,
 ): WrappedApiPageEnsurer | WrappedPageComponentFinder {
+  console.log('wrapping methodforgettingparameterizedpath...');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wrappedMethod = async function(this: Server, parameterizedPath: string, ...args: any[]): Promise<any> {
     const transaction = getActiveTransaction();
