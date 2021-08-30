@@ -113,6 +113,8 @@ function makeWrappedHandlerGetter(origHandlerGetter: HandlerGetter): WrappedHand
   // We wrap this purely in order to be able to grab data and do further monkeypatching the first time it runs.
   // Otherwise, it's just a pass-through to the original method.
   const wrappedHandlerGetter = async function(this: NextServer): Promise<ReqHandler> {
+    console.log('in wrappedHandlerGetter');
+
     if (!sdkSetupComplete) {
       // stash this in the closure so that `makeWrappedReqHandler` can use it
       liveServer = this.server;
