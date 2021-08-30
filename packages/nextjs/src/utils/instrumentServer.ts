@@ -155,7 +155,8 @@ function makeWrappedErrorLogger(origErrorLogger: ErrorLogger): WrappedErrorLogge
     // TODO add context data here
     logger.log('before capturing exception: ', err.message);
     captureException(err);
-    return origErrorLogger.call(this, err);
+    // return origErrorLogger.call(this, err);
+    // dont do anything
   };
 }
 
